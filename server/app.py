@@ -8,18 +8,54 @@ from flask_restful import Resource
 
 
 # Local imports
-from config import app, db, api
+from config import app, db, api, ma
 
 # Add your model imports
 from models import User, Dog, Adoption, Review, Visit
 
 
+class DogSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Dog
+        load_instance = True
+
+    id = ma.auto_field()
+    name = ma.auto_field()
+    breed = ma.auto_field()
+    age = ma.auto_field()
+    gender = ma.auto_field()
+    description = ma.auto_field()
+    image_url = ma.auto_field()
+
+
+singular_dog_schema = DogSchema()
+plural_dog_schema = DogSchema(many=True)
+
+
 # Views go here!
 class Dogs(Resource):
     def get(self):
-        dogs = [dog.to_dict() for dog in Dog.query.all()]
+        dogs = Dog.query.all()
+        return plural_dog_schema.dump(dogs), 200
 
-        return make_response(jsonify(dogs), 200)
+    def post(self):
+        data = request.get_json()
+
+        new_dog = Dog(
+            name=data.get("name"),
+            breed=data.get("breed"),
+            age=data.get("age"),
+            gender=data.get("gender"),
+            description=data.get("description"),
+            image_url=data.get("image_url"),
+        )
+
+        db.session.add(new_dog)
+        db.session.commit()
+
+        response = make_response(singular_dog_schema.dump(new_dog), 201)
+
+        return response
 
 
 api.add_resource(Dogs, "/dogs")

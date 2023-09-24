@@ -8,10 +8,10 @@ from config import db, bcrypt
 
 
 # Models go here!
-class User(db.Model, SerializerMixin):
+class User(db.Model):
     __tablename__ = "user"
 
-    serialize_rules = ("-__password_hash",)
+    # serialize_rules = ("-__password_hash",)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -36,10 +36,12 @@ class User(db.Model, SerializerMixin):
         )
 
     def __repr__(self):
-        return f"<User: {self.username}>"
+        return (
+            f"\n<User: username={self.username} email={self.email} admin={self.admin}>"
+        )
 
 
-class Dog(db.Model, SerializerMixin):
+class Dog(db.Model):
     __tablename__ = "dog"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -55,22 +57,22 @@ class Dog(db.Model, SerializerMixin):
     def __repr__(self):
         return (
             f"<Dog:\n"
-            f" Name: {self.name}\n"
-            f" Breed: {self.breed}\n"
-            f" Age: {self.age}\n"
-            f" Gender: {self.gender}\n"
-            f" Description: {self.description}\n"
-            f" Image: {self.image_url}>"
+            f" name={self.name}\n"
+            f" breed={self.breed}\n"
+            f" age={self.age}\n"
+            f" gender={self.gender}\n"
+            f" description={self.description}\n"
+            f" image={self.image_url}>"
         )
 
 
-class Adoption(db.Model, SerializerMixin):
+class Adoption(db.Model):
     __tablename__ = "adoption"
 
-    serialize_rules = (
-        "-user.adoptions",
-        "-dog.adoptions",
-    )
+    # serialize_rules = (
+    #     "-user.adoptions",
+    #     "-dog.adoptions",
+    # )
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -85,13 +87,13 @@ class Adoption(db.Model, SerializerMixin):
         return f"<Adoption:\n" f" Date: {self.adoption_date}\n>"
 
 
-class Review(db.Model, SerializerMixin):
+class Review(db.Model):
     __tablename__ = "review"
 
-    serialize_rules = (
-        "-user.reviews",
-        "-dog.reviews",
-    )
+    # serialize_rules = (
+    #     "-user.reviews",
+    #     "-dog.reviews",
+    # )
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -108,10 +110,10 @@ class Review(db.Model, SerializerMixin):
         return f"<Review: \n" f"Rating: {self.rating}\n" f"Comment: {self.comment}>,"
 
 
-class Visit(db.Model, SerializerMixin):
+class Visit(db.Model):
     __tablename__ = "visit"
 
-    serialize_rules = ("-user.visits", "-dog.visits")
+    # serialize_rules = ("-user.visits", "-dog.visits")
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -125,6 +127,6 @@ class Visit(db.Model, SerializerMixin):
     def __repr__(self):
         return (
             f"<Visit: \n"
-            f"Scheduled Date: {self.scheduled_date} \n"
-            f"Status: {self.visit_status}"
+            f"Scheduled Date={self.scheduled_date} \n"
+            f"Status={self.visit_status}"
         )

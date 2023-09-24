@@ -52,17 +52,16 @@ class Dog(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now())
 
-
-def __repr__(self):
-    return (
-        f"<Dog:\n"
-        f" Name: {self.name}\n"
-        f" Breed: {self.breed}\n"
-        f" Age: {self.age}\n"
-        f" Gender: {self.gender}\n"
-        f" Description: {self.description}\n"
-        f" Image: {self.image_url}>"
-    )
+    def __repr__(self):
+        return (
+            f"<Dog:\n"
+            f" Name: {self.name}\n"
+            f" Breed: {self.breed}\n"
+            f" Age: {self.age}\n"
+            f" Gender: {self.gender}\n"
+            f" Description: {self.description}\n"
+            f" Image: {self.image_url}>"
+        )
 
 
 class Adoption(db.Model, SerializerMixin):
@@ -82,9 +81,8 @@ class Adoption(db.Model, SerializerMixin):
     user = db.relationship("User", backref="adoptions")
     dog = db.relationship("Dog", backref="adoptions")
 
-
-def __repr__(self):
-    return f"<Adoption:\n" f" Date: {self.adoption_date}\n>"
+    def __repr__(self):
+        return f"<Adoption:\n" f" Date: {self.adoption_date}\n>"
 
 
 class Review(db.Model, SerializerMixin):
@@ -106,6 +104,9 @@ class Review(db.Model, SerializerMixin):
     user = db.relationship("User", backref="reviews")
     dog = db.relationship("Dog", backref="reviews")
 
+    def __repr__(self):
+        return f"<Review: \n" f"Rating: {self.rating}\n" f"Comment: {self.comment}>,"
+
 
 class Visit(db.Model, SerializerMixin):
     __tablename__ = "visit"
@@ -120,3 +121,10 @@ class Visit(db.Model, SerializerMixin):
 
     user = db.relationship("User", backref="visits")
     dog = db.relationship("Dog", backref="visits")
+
+    def __repr__(self):
+        return (
+            f"<Visit: \n"
+            f"Scheduled Date: {self.scheduled_date} \n"
+            f"Status: {self.visit_status}"
+        )

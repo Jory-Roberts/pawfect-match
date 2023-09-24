@@ -42,8 +42,6 @@ class User(db.Model, SerializerMixin):
 class Dog(db.Model, SerializerMixin):
     __tablename__ = "dog"
 
-    serialize_rules = ("-image_url",)
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     breed = db.Column(db.String(50))
@@ -62,7 +60,8 @@ def __repr__(self):
         f" Breed: {self.breed}\n"
         f" Age: {self.age}\n"
         f" Gender: {self.gender}\n"
-        f" Description: {self.description}>"
+        f" Description: {self.description}\n"
+        f" Image: {self.image_url}>"
     )
 
 

@@ -3,8 +3,9 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request
+from flask import Flask, jsonify, make_response, request
 from flask_restful import Resource
+
 
 # Local imports
 from config import app, db, api
@@ -14,6 +15,14 @@ from models import User, Dog, Adoption, Review, Visit
 
 
 # Views go here!
+class Dogs(Resource):
+    def get(self):
+        dogs = [dog.to_dict() for dog in Dog.query.all()]
+
+        return make_response(jsonify(dogs), 200)
+
+
+api.add_resource(Dogs, "/dogs")
 
 
 @app.route("/")

@@ -3,8 +3,9 @@
 # Standard library imports
 
 # Remote library imports
-from flask import Flask, jsonify, make_response, request
+from flask import Flask, jsonify, make_response, request, session
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 
 
 # Local imports
@@ -30,6 +31,61 @@ class DogSchema(ma.SQLAlchemySchema):
 
 singular_dog_schema = DogSchema()
 plural_dog_schema = DogSchema(many=True)
+
+
+class UserSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+        load_instance = True
+
+    id = ma.auto_field()
+    username = ma.auto_field()
+    email = ma.auto_field()
+
+
+singular_user_schema = UserSchema()
+plural_user_schema = UserSchema(many=True)
+
+
+def check_for_missing_values(data):
+    errors_list = []
+
+    for key, value in data.items():
+        if not value:
+            errors_list.append(f"{key} is required")
+
+    return errors_list
+
+
+class Users(Resource):
+    def post(self):
+        data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if len(errors) > 0:
+            return {"errors": errors}, 422
+
+        user = User(username=data["username"], email=data["email"])
+
+        user.password_hash = data["password"]
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+
+            session["user_id"] = user.id
+            return singular_user_schema.dump(user), 201
+
+        except IntegrityError as e:
+            if isinstance(e, (IntegrityError)):
+                for error in e.args:
+                    if "UNIQUE" in error:
+                        errors.append("Email is already registered. Please try again")
+
+            return {"errors": errors}, 422
+
+
+api.add_resource(Users, "/users")
 
 
 # Views go here!

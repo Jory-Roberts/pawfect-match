@@ -82,9 +82,18 @@ class DogById(Resource):
         db.session.add(dog)
         db.session.commit()
 
-        response = make_response(singular_dog_schema.dump(dog), 200)
+        return singular_dog_schema.dump(dog), 200
 
-        return response
+    def delete(self, id):
+        dog = Dog.query.filter_by(id=id).first()
+
+        if not dog:
+            return {"error": "Dog not found"}, 404
+
+        db.session.delete(dog)
+        db.session.commit()
+
+        return {"message": "dog successfully deleted"}
 
 
 api.add_resource(DogById, "/dogs/<int:id>")

@@ -61,6 +61,35 @@ class Dogs(Resource):
 api.add_resource(Dogs, "/dogs")
 
 
+class DogById(Resource):
+    def get(self, id):
+        dog = Dog.query.filter_by(id=id).first()
+
+        if not dog:
+            return {"error": "Dog not found"}, 404
+
+        return singular_dog_schema.dump(dog), 200
+
+    def patch(self, id):
+        dog = Dog.query.filter_by(id=id).first()
+
+        if not dog:
+            return {"error": "Dog not found"}, 404
+
+        for attr in request.form:
+            setattr(dog, attr, request.form[attr])
+
+        db.session.add(dog)
+        db.session.commit()
+
+        response = make_response(singular_dog_schema.dump(dog), 200)
+
+        return response
+
+
+api.add_resource(DogById, "/dogs/<int:id>")
+
+
 @app.route("/")
 def index():
     return "<h1>Project Server</h1>"

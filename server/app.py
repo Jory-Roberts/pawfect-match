@@ -85,7 +85,17 @@ class Users(Resource):
             return {"errors": errors}, 422
 
 
-api.add_resource(Users, "/users")
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    user = User.query.filter(User.username == data["username"]).first()
+
+    if not user or not user.authenticate(data["password"]):
+        return {"errors": ["Username or password is incorrect"]}, 401
+
+    session["user_id"] = user.id
+    return singular_user_schema.dump(user), 200
 
 
 # Views go here!
@@ -112,9 +122,6 @@ class Dogs(Resource):
         response = make_response(singular_dog_schema.dump(new_dog), 201)
 
         return response
-
-
-api.add_resource(Dogs, "/dogs")
 
 
 class DogById(Resource):
@@ -152,6 +159,8 @@ class DogById(Resource):
         return {"message": "dog successfully deleted"}
 
 
+api.add_resource(Users, "/users")
+api.add_resource(Dogs, "/dogs")
 api.add_resource(DogById, "/dogs/<int:id>")
 
 

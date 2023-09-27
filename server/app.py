@@ -15,6 +15,7 @@ from config import app, db, api, ma
 from models import User, Dog, Adoption, Review, Visit
 
 
+# Views go here!
 class DogSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Dog
@@ -45,6 +46,56 @@ class UserSchema(ma.SQLAlchemySchema):
 
 singular_user_schema = UserSchema()
 plural_user_schema = UserSchema(many=True)
+
+
+class AdoptionSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Adoption
+        load_instance = True
+
+    id = ma.auto_field()
+    user_id = ma.auto_field()
+    dog_id = ma.auto_field()
+    adoption_date = ma.auto_field()
+    status = ma.auto_field()
+
+
+singular_adoption_schema = AdoptionSchema()
+plural_adoption_schema = AdoptionSchema(many=True)
+
+
+class ReviewSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Review
+        load_instance = True
+
+    id = ma.auto_field()
+    user_id = ma.auto_field()
+    dog_id = ma.auto_field()
+    rating = ma.auto_field()
+    comment = ma.auto_field()
+    created_at = ma.auto_field()
+    updated_at = ma.auto_field()
+
+
+singular_review_schema = ReviewSchema()
+plural_review_schema = ReviewSchema(many=True)
+
+
+class VisitSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Visit
+        load_instance = True
+
+    id = ma.auto_field()
+    user_id = ma.auto_field()
+    dog_id = ma.auto_field()
+    scheduled_date = ma.auto_field()
+    visit_status = ma.auto_field()
+
+
+singular_visit_schema = VisitSchema()
+plural_visit_schema = VisitSchema(many=True)
 
 
 def check_for_missing_values(data):
@@ -98,7 +149,6 @@ def login():
     return singular_user_schema.dump(user), 200
 
 
-# Views go here!
 class Dogs(Resource):
     def get(self):
         dogs = Dog.query.all()

@@ -11,8 +11,6 @@ from config import db, bcrypt
 class User(db.Model):
     __tablename__ = "user"
 
-    # serialize_rules = ("-__password_hash",)
-
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     __password_hash = db.Column(db.String)
@@ -69,11 +67,6 @@ class Dog(db.Model):
 class Adoption(db.Model):
     __tablename__ = "adoption"
 
-    # serialize_rules = (
-    #     "-user.adoptions",
-    #     "-dog.adoptions",
-    # )
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     dog_id = db.Column(db.Integer, db.ForeignKey("dog.id"), nullable=False)
@@ -89,11 +82,6 @@ class Adoption(db.Model):
 
 class Review(db.Model):
     __tablename__ = "review"
-
-    # serialize_rules = (
-    #     "-user.reviews",
-    #     "-dog.reviews",
-    # )
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -112,8 +100,6 @@ class Review(db.Model):
 
 class Visit(db.Model):
     __tablename__ = "visit"
-
-    # serialize_rules = ("-user.visits", "-dog.visits")
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

@@ -20,7 +20,7 @@ def seed_dogs():
         age=5,
         gender="Female",
         description="Goodest girl",
-        image_url="https://commons.wikimedia.org/wiki/List_of_dog_breeds#/media/File:Alaskanmalamute0b.jpg",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/1/16/Alaskanmalamute0b.jpg",
     )
     dogs.append(d1)
 
@@ -30,7 +30,7 @@ def seed_dogs():
         age=2,
         gender="Male",
         description="Short but sweet",
-        image_url="https://commons.wikimedia.org/wiki/List_of_dog_breeds#/media/File:MiniDachshund1_wb.jpg",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/f/f4/MiniDachshund1_wb.jpg",
     )
 
     dogs.append(d2)
@@ -41,7 +41,7 @@ def seed_dogs():
         age=3,
         gender="Male",
         description="Hope you like hair!",
-        image_url="https://commons.wikimedia.org/wiki/List_of_dog_breeds#/media/File:Australian_Shepherd.jpg",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/d/d4/Australian_Shepherd.jpg",
     )
 
     dogs.append(d3)
@@ -52,7 +52,7 @@ def seed_dogs():
         age=4,
         gender="Female",
         description="Hi! I'm down here! I need attention!",
-        image_url="https://commons.wikimedia.org/wiki/List_of_dog_breeds#/media/File:Pembroke_Welsh_Corgi_600.jpg",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/b/bf/Pembroke_Welsh_Corgi_600.jpg",
     )
 
     dogs.append(d4)
@@ -63,7 +63,7 @@ def seed_dogs():
         age=9,
         gender="Male",
         description="Prefer cuddles",
-        image_url="https://commons.wikimedia.org/wiki/List_of_dog_breeds#/media/File:Berne%C5%84ski_pies_pasterski.jpg",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/0/05/Berne%C5%84ski_pies_pasterski.jpg",
     )
 
     dogs.append(d5)

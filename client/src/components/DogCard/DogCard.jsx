@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 
 const DogCard = ({ dog }) => {
-  const { id, name, breed, age, gender, description, image_url } = dog;
+  const { id, name, image_url } = dog;
+  console.log(`Image: ${image_url}`);
 
   return (
     <div>
@@ -9,10 +10,6 @@ const DogCard = ({ dog }) => {
         <Link to={`/dogs/${id}`}>
           <div>
             <h2>{name}</h2>
-            <p>{breed}</p>
-            <p>{age}</p>
-            <p>{gender}</p>
-            <p>{description}</p>
           </div>
           <img
             src={image_url}

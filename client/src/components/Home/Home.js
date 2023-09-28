@@ -3,7 +3,7 @@ import DogContainer from '../DogContainer/DogContainer';
 const Home = ({ dogs }) => {
   return (
     <div>
-      Home
+      <h1>Meet your new match!</h1>
       <DogContainer dogs={dogs} />
     </div>
   );

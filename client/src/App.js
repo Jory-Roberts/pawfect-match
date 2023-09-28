@@ -3,7 +3,8 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
 import DogDetail from './components/DogDetail/DogDetail';
 import Header from './components/Header/Header';
-import DogCard from './components/DogCard/DogCard';
+import Navigation from './components/Navigation/Navigation';
+import 'bootstrap/scss/bootstrap.scss';
 
 function App() {
   const [dogs, setDogs] = useState([]);
@@ -22,6 +23,7 @@ function App() {
     <div>
       <main>
         <Header />
+        <Navigation />
         <Routes>
           <Route
             path='/'

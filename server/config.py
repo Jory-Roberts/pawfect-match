@@ -14,14 +14,14 @@ from dotenv import load_dotenv
 import os
 
 # Local imports
-load_dotenv("../.env")
+load_dotenv()
 
 # Instantiate app, set attributes
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
-app.secret_key = "SECRET_KEY"
+os.environ.get("SECRET_KEY")
 
 # Define metadata, instantiate db
 metadata = MetaData(

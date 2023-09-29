@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
+import DogLanding from './components/DogLanding/DogLanding';
 import DogDetail from './components/DogDetail/DogDetail';
 import Header from './components/Header/Header';
 import Navigation from './components/Navigation/Navigation';
 import 'bootstrap/scss/bootstrap.scss';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
   const [dogs, setDogs] = useState([]);
@@ -27,7 +29,11 @@ function App() {
         <Routes>
           <Route
             path='/'
-            element={<Home dogs={dogs} />}
+            element={<Home />}
+          />
+          <Route
+            path='/dogs'
+            element={<DogLanding dogs={dogs} />}
           />
           <Route
             path='/dogs/:id'

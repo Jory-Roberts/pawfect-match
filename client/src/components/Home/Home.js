@@ -1,11 +1,61 @@
-import DogContainer from '../DogContainer/DogContainer';
+import './Home.scss';
 
-const Home = ({ dogs }) => {
+const Home = () => {
   return (
-    <div>
-      <h1>Meet your new match!</h1>
-      <DogContainer dogs={dogs} />
+    <div
+      id='carouselExampleFade'
+      className='carousel slide carousel-fade'
+      data-bs-ride='carousel'
+    >
+      <div className='carousel-inner'>
+        <div className='carousel-item active'>
+          <img
+            src='https://upload.wikimedia.org/wikipedia/commons/c/c5/Living_hand_to_paw.jpg'
+            className='d-block w-100'
+            alt=''
+          />
+        </div>
+        <div className='carousel-item'>
+          <img
+            src='https://upload.wikimedia.org/wikipedia/commons/3/33/Callie_the_golden_retriever_puppy.jpg'
+            className='d-block w-100'
+            alt=''
+          />
+        </div>
+        <div className='carousel-item'>
+          <img
+            src='https://upload.wikimedia.org/wikipedia/commons/4/45/Cachorro-perro.jpg'
+            className='d-block w-100'
+            alt=''
+          />
+        </div>
+      </div>
+      <button
+        className='carousel-control-prev'
+        type='button'
+        data-bs-target='#carouselExampleFade'
+        data-bs-slide='prev'
+      >
+        <span
+          className='carousel-control-prev-icon'
+          aria-hidden='true'
+        ></span>
+        <span className='visually-hidden'>Previous</span>
+      </button>
+      <button
+        className='carousel-control-next'
+        type='button'
+        data-bs-target='#carouselExampleFade'
+        data-bs-slide='next'
+      >
+        <span
+          className='carousel-control-next-icon'
+          aria-hidden='true'
+        ></span>
+        <span className='visually-hidden'>Next</span>
+      </button>
     </div>
   );
 };
+
 export default Home;

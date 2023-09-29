@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function Navigation() {
   return (
-    <nav class='navbar navbar-dark bg-dark'>
+    <nav class='navbar navbar-expand-lg navbar-light bg-light'>
       <div className='container-fluid'>
         <Link
           className='navbar-brand'
@@ -43,29 +43,14 @@ function Navigation() {
               </Link>
             </li>
             <li className='nav-item'>
-              <span
-                className='nav-link disabled'
-                tabIndex='-1'
-                aria-disabled='true'
+              <Link
+                className='nav-link'
+                to='/users'
               >
-                Disabled
-              </span>
+                Login
+              </Link>
             </li>
           </ul>
-          <form className='d-flex'>
-            <input
-              className='form-control me-2'
-              type='search'
-              placeholder='Search'
-              aria-label='Search'
-            />
-            <button
-              className='btn btn-outline-success'
-              type='submit'
-            >
-              Search
-            </button>
-          </form>
         </div>
       </div>
     </nav>

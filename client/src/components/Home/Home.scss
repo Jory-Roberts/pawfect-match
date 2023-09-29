@@ -1,0 +1,11 @@
+$carousel-height: 400px;
+
+.carousel {
+  max-height: $carousel-height;
+
+  .d-block {
+    max-height: $carousel-height;
+    width: auto;
+    margin: 0 auto;
+  }
+}

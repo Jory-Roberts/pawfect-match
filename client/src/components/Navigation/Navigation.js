@@ -37,17 +37,17 @@ function Navigation() {
             <li className='nav-item'>
               <Link
                 className='nav-link'
-                to='/dogs'
+                to='/authentication'
               >
-                Dogs
+                Login/Signup
               </Link>
             </li>
             <li className='nav-item'>
               <Link
                 className='nav-link'
-                to='/users'
+                to='/dogs'
               >
-                Login
+                Dogs
               </Link>
             </li>
           </ul>

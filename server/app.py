@@ -131,7 +131,9 @@ class Users(Resource):
             if isinstance(e, (IntegrityError)):
                 for error in e.args:
                     if "UNIQUE" in error:
-                        errors.append("Email is already registered. Please try again")
+                        errors.append(
+                            "Email or username is already registered. Please try again"
+                        )
 
             return {"errors": errors}, 422
 
@@ -147,6 +149,21 @@ def login():
 
     session["user_id"] = user.id
     return singular_user_schema.dump(user), 200
+
+
+@app.route("/authorized", methods=["POST"])
+def authorized():
+    user = User.query.filter(User.id == session.get("user_id")).first()
+    if user:
+        return singular_user_schema.dump(user), 200
+    else:
+        return ({"errors": ["Unauthorized"]}), 401
+
+
+@app.route("/logout", methods=["DELETE"])
+def logout():
+    session["user_id"] = None
+    return {}, 204
 
 
 class Dogs(Resource):

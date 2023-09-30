@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
-import Login from './components/Login/Login';
-import CreateUser from './components/CreateUser/CreateUser';
+import Authentication from './components/Authentication/Authentication';
 import DogLanding from './components/DogLanding/DogLanding';
 import DogDetail from './components/DogDetail/DogDetail';
 import Header from './components/Header/Header';
@@ -13,8 +12,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
   const [dogs, setDogs] = useState([]);
-  const [username, setUserName] = useState('');
-  const [email, setEmail] = useState('');
 
   const fetchDogs = async () => {
     const response = await fetch('/dogs');
@@ -46,17 +43,8 @@ function App() {
               element={<DogDetail />}
             />
             <Route
-              path='/login'
-              element={
-                <Login
-                  username={setUserName}
-                  email={setEmail}
-                />
-              }
-            />
-            <Route
-              path='/users'
-              element={CreateUser}
+              path='/authentication'
+              element={<Authentication />}
             />
           </Routes>
         </UseContext>

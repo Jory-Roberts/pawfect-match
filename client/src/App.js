@@ -42,6 +42,10 @@ function App() {
     }
   };
 
+  const addDog = (dog) => {
+    setDogs((current) => [...current, dog]);
+  };
+
   const updateUser = (user) => setUser(user);
 
   return (
@@ -61,7 +65,7 @@ function App() {
             />
             <Route
               path='/dogs/new'
-              element={<NewDogForm />}
+              element={<NewDogForm addDog={addDog} />}
             ></Route>
             <Route
               path='/dogs/:id'

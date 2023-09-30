@@ -1,29 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
-const NewDogForm = () => {
-  const [newDog, setNewDog] = useState([{}]);
-  const [newDogError, setNewDogError] = useState([]);
-
-  useEffect(() => {
-    fetchNewDog();
-  }, []);
-
-  const fetchNewDog = async () => {
-    try {
-      const response = await fetch('/dogs');
-      if (response.ok) {
-        const newDogData = await response.json();
-        setNewDog(newDogData);
-      } else {
-        const errorData = await response.json();
-        setNewDogError(errorData);
-      }
-    } catch (err) {
-      setNewDogError({ message: 'An error occurred while trying to add a new dog' });
-    }
-  };
+const NewDogForm = ({ addDog }) => {
+  const navigate = useNavigate();
 
   const formSchema = yup.object().shape({
     name: yup.string().required('Must enter a name'),
@@ -44,18 +24,25 @@ const NewDogForm = () => {
       image_url: '',
     },
     validationSchema: formSchema,
-    onSubmit: (values) => {
-      fetch('/dogs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values, null, 2),
-      }).then((res) => {
-        if (res.status === 200) {
-          setNewDog(newDog);
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch('/dogs', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(values),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to add new dog');
         }
-      });
+        const newDogData = await response.json();
+        addDog(newDogData);
+        formik.resetForm();
+        navigate('/dogs');
+      } catch (error) {
+        console.error('Error adding new dog:', error);
+      }
     },
   });
 

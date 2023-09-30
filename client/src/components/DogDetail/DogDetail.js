@@ -24,7 +24,7 @@ const DogDetail = () => {
 
   useEffect(() => {
     fetchDog();
-  });
+  }, []);
 
   const { id, name, breed, age, gender, description, image_url } = dog;
 

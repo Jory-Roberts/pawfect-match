@@ -175,20 +175,18 @@ class Dogs(Resource):
         data = request.get_json()
 
         new_dog = Dog(
-            name=data.get("name"),
-            breed=data.get("breed"),
-            age=data.get("age"),
-            gender=data.get("gender"),
-            description=data.get("description"),
-            image_url=data.get("image_url"),
+            name=data["name"],
+            breed=data["breed"],
+            age=data["age"],
+            gender=data["gender"],
+            description=data["description"],
+            image_url=data["image_url"],
         )
 
         db.session.add(new_dog)
         db.session.commit()
 
-        response = make_response(singular_dog_schema.dump(new_dog), 201)
-
-        return response
+        return singular_dog_schema.dump(new_dog), 201
 
 
 class DogById(Resource):

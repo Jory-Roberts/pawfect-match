@@ -4,6 +4,7 @@ import Home from './components/Home/Home';
 import Authentication from './components/Authentication/Authentication';
 import DogLanding from './components/DogLanding/DogLanding';
 import DogDetail from './components/DogDetail/DogDetail';
+import NewDogForm from './components/NewDogForm/NewDogForm';
 import Header from './components/Header/Header';
 import Navigation from './components/Navigation/Navigation';
 import UseContext from './components/UseContext/UseContext';
@@ -12,6 +13,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 function App() {
   const [dogs, setDogs] = useState([]);
+  const [user, setUser] = useState('');
+  const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    fetchDogs();
+    fetchUser();
+  }, []);
 
   const fetchDogs = async () => {
     const response = await fetch('/dogs');
@@ -19,9 +27,22 @@ function App() {
     setDogs(dogData);
   };
 
-  useEffect(() => {
-    fetchDogs();
-  }, []);
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('/authorized');
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      } else {
+        const errorData = await response.json();
+        setErrors(errorData);
+      }
+    } catch (err) {
+      setErrors({ message: 'An error occurred while fetching the user' });
+    }
+  };
+
+  const updateUser = (user) => setUser(user);
 
   return (
     <div>
@@ -39,12 +60,16 @@ function App() {
               element={<DogLanding dogs={dogs} />}
             />
             <Route
+              path='/dogs/new'
+              element={<NewDogForm />}
+            ></Route>
+            <Route
               path='/dogs/:id'
               element={<DogDetail />}
             />
             <Route
               path='/authentication'
-              element={<Authentication />}
+              element={<Authentication updateUser={updateUser} />}
             />
           </Routes>
         </UseContext>

@@ -7,18 +7,17 @@ import DogDetail from './components/DogDetail/DogDetail';
 import NewDogForm from './components/NewDogForm/NewDogForm';
 import Header from './components/Header/Header';
 import Navigation from './components/Navigation/Navigation';
-import UseContext from './components/UseContext/UseContext';
+import AuthProvider, { useAuth } from './components/AuthProvider/AuthProvider';
 import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-function App() {
+function AppContent() {
   const [dogs, setDogs] = useState([]);
-  const [user, setUser] = useState('');
-  const [errors, setErrors] = useState([]);
+  const { user, checkUserSession } = useAuth();
 
   useEffect(() => {
     fetchDogs();
-    fetchUser();
+    checkUserSession();
   }, []);
 
   const fetchDogs = async () => {
@@ -27,40 +26,15 @@ function App() {
     setDogs(dogData);
   };
 
-  const fetchUser = async () => {
-    try {
-      const response = await fetch('/authorized');
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        const errorData = await response.json();
-        setErrors(errorData);
-      }
-    } catch (err) {
-      setErrors(err);
-    }
-  };
-
   const addDog = (dog) => {
     setDogs((current) => [...current, dog]);
   };
-
-  const updateUser = (user) => setUser(user);
-
-  if (!user)
-    return (
-      <>
-        <Navigation updateUser={updateUser} />
-        <Authentication updateUser={updateUser} />
-      </>
-    );
 
   return (
     <div>
       <main>
         <Header />
-        <Navigation updateUser={updateUser} />
+        <Navigation />
         <Routes>
           <Route
             path='/'
@@ -73,18 +47,26 @@ function App() {
           <Route
             path='/dogs/new'
             element={<NewDogForm addDog={addDog} />}
-          ></Route>
+          />
           <Route
             path='/dogs/:id'
             element={<DogDetail />}
           />
           <Route
             path='/authentication'
-            element={<Authentication updateUser={updateUser} />}
+            element={<Authentication />}
           />
         </Routes>
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

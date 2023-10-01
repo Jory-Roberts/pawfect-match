@@ -166,6 +166,16 @@ def logout():
     return {}, 204
 
 
+@app.route("/check-session", methods=["GET"])
+def check_session():
+    user = User.query.filter(User.username == session.get("username")).first()
+
+    if user:
+        return {"username": user.username}, 200
+    else:
+        return {"message": "Unauthorized"}, 401
+
+
 class Dogs(Resource):
     def get(self):
         dogs = Dog.query.all()

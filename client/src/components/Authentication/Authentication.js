@@ -1,9 +1,13 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
+import { useAuth } from '../AuthProvider/AuthProvider';
+import { useNavigate } from 'react-router';
 import * as yup from 'yup';
 
-const Authentication = ({ updateUser }) => {
+const Authentication = () => {
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
+  const { login } = useAuth();
 
   const signUpSchema = yup.object().shape({
     username: yup.string().required('Username is required'),
@@ -37,7 +41,9 @@ const Authentication = ({ updateUser }) => {
         const userData = await response.json();
 
         if (response.ok) {
-          updateUser(userData);
+          login(userData);
+          alert('Account created!');
+          navigate('/');
         } else {
           console.log('Unable to authenticate');
         }

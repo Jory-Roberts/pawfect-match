@@ -38,7 +38,7 @@ function App() {
         setErrors(errorData);
       }
     } catch (err) {
-      setErrors({ message: 'An error occurred while fetching the user' });
+      setErrors(err);
     }
   };
 
@@ -48,35 +48,41 @@ function App() {
 
   const updateUser = (user) => setUser(user);
 
+  if (!user)
+    return (
+      <>
+        <Navigation updateUser={updateUser} />
+        <Authentication updateUser={updateUser} />
+      </>
+    );
+
   return (
     <div>
       <main>
-        <UseContext>
-          <Header />
-          <Navigation />
-          <Routes>
-            <Route
-              path='/'
-              element={<Home />}
-            />
-            <Route
-              path='/dogs'
-              element={<DogLanding dogs={dogs} />}
-            />
-            <Route
-              path='/dogs/new'
-              element={<NewDogForm addDog={addDog} />}
-            ></Route>
-            <Route
-              path='/dogs/:id'
-              element={<DogDetail />}
-            />
-            <Route
-              path='/authentication'
-              element={<Authentication updateUser={updateUser} />}
-            />
-          </Routes>
-        </UseContext>
+        <Header />
+        <Navigation updateUser={updateUser} />
+        <Routes>
+          <Route
+            path='/'
+            element={<Home />}
+          />
+          <Route
+            path='/dogs'
+            element={<DogLanding dogs={dogs} />}
+          />
+          <Route
+            path='/dogs/new'
+            element={<NewDogForm addDog={addDog} />}
+          ></Route>
+          <Route
+            path='/dogs/:id'
+            element={<DogDetail />}
+          />
+          <Route
+            path='/authentication'
+            element={<Authentication updateUser={updateUser} />}
+          />
+        </Routes>
       </main>
     </div>
   );

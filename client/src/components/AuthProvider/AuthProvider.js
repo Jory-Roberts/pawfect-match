@@ -28,15 +28,21 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (userData) => {
-    await fetch('/login', {
+  const login = async (username, password) => {
+    const userData = {
+      username: username,
+      password: password,
+    };
+
+    const response = await fetch('/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(userData),
     });
-    setUser(userData);
+    const responseData = await response.json();
+    console.log(responseData);
   };
 
   const logout = async () => {

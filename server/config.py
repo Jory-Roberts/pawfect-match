@@ -13,7 +13,10 @@ from sqlalchemy import MetaData
 from dotenv import load_dotenv
 import os
 
+
 # Local imports
+load_dotenv("../.env")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 # Instantiate app, set attributes
@@ -31,6 +34,7 @@ metadata = MetaData(
 )
 db = SQLAlchemy(metadata=metadata)
 migrate = Migrate(app, db)
+
 db.init_app(app)
 
 bcrypt = Bcrypt(app)

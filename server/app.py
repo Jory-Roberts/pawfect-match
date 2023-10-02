@@ -168,10 +168,12 @@ def logout():
 
 @app.route("/check-session", methods=["GET"])
 def check_session():
-    user = User.query.filter(User.username == session.get("username")).first()
+    user = User.query.filter_by(id=session.get("user_id")).first()
 
     if user:
+        print(f"{user.username} logged out!")
         return {"username": user.username}, 200
+
     else:
         return {"message": "Unauthorized"}, 401
 

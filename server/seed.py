@@ -92,6 +92,7 @@ def main():
     fake = Faker()
     with app.app_context():
         Dog.query.delete()
+        User.query.delete()
 
         print("Starting seed...")
 

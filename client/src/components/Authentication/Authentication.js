@@ -42,13 +42,19 @@ const Authentication = () => {
 
         if (response.ok) {
           login(userData);
-          alert('Account created!');
+          if (isSignUp) {
+            alert('Account created!');
+          } else {
+            alert('Logged in successfully!');
+          }
           navigate('/');
         } else {
-          console.log('Unable to authenticate');
+          const errorMessage = userData.message || 'Unable to authenticate';
+          alert(errorMessage);
         }
       } catch (err) {
         console.error('An error occurred during authentication', err);
+        alert('An unexpected error occurred. Please try again.');
       }
     },
   });
@@ -57,7 +63,7 @@ const Authentication = () => {
     <div className='container'>
       <h1>{isSignUp ? 'Signup' : 'Login'}</h1>
       <form onSubmit={formik.handleSubmit}>
-        {isSignUp && (
+        {(!isSignUp || isSignUp) && ( // Display "Username" field in both modes
           <div className='form-group'>
             <label htmlFor='username'>Username</label>
             <input
@@ -70,7 +76,7 @@ const Authentication = () => {
           </div>
         )}
 
-        {(isSignUp || !isSignUp) && (
+        {isSignUp && (
           <div className='form-group'>
             <label htmlFor='email'>Email</label>
             <input

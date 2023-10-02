@@ -28,13 +28,22 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = (userData) => {
+  const login = async (userData) => {
+    await fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
     setUser(userData);
   };
 
   const logout = async () => {
     try {
-      const response = await fetch('/logout');
+      const response = await fetch('/logout', {
+        method: 'DELETE',
+      });
 
       if (response.ok) {
         await response.json();

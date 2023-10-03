@@ -108,17 +108,22 @@ def check_for_missing_values(data):
     return errors_list
 
 
-class Users(Resource):
+class SignUp(Resource):
     def post(self):
         data = request.get_json()
+
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
+
         errors = check_for_missing_values(data)
 
         if len(errors) > 0:
             return {"errors": errors}, 422
 
-        user = User(username=data["username"], email=data["email"])
+        user = User(username=username, email=email)
 
-        user.password_hash = data["password"]
+        user.password_hash = password
 
         try:
             db.session.add(user)
@@ -138,44 +143,39 @@ class Users(Resource):
             return {"errors": errors}, 422
 
 
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        username = data.get("username")
+        password = data.get("password")
 
-    user = User.query.filter(User.username == data["username"]).first()
+        user = User.query.filter(User.username == username).first()
 
-    if not user or not user.authenticate(data["password"]):
-        return {"errors": ["Username or password is incorrect"]}, 401
+        if not user or not user.authenticate(password):
+            return {"errors": ["Username or password is incorrect"]}, 401
 
-    session["user_id"] = user.id
-    return singular_user_schema.dump(user), 200
-
-
-@app.route("/authorized", methods=["POST"])
-def authorized():
-    user = User.query.filter(User.id == session.get("user_id")).first()
-    if user:
+        session["user_id"] = user.id
         return singular_user_schema.dump(user), 200
-    else:
-        return ({"errors": ["Unauthorized"]}), 401
 
 
-@app.route("/logout", methods=["DELETE"])
-def logout():
-    session["user_id"] = None
-    return {}, 204
+class Logout(Resource):
+    def delete(self):
+        if session.get("user_id"):
+            session["user_id"] = None
+
+            return {}, 204
+
+        return {"error": "401 unauthorized"}, 401
 
 
-@app.route("/check-session", methods=["GET"])
-def check_session():
-    user = User.query.filter_by(id=session.get("user_id")).first()
+class CheckSession(Resource):
+    def get(self):
+        if session.get("user_id"):
+            user = User.query.filter(User.id == session["user_id"]).first()
 
-    if user:
-        print(f"{user.username} logged out!")
-        return {"username": user.username}, 200
+            return singular_user_schema.dump(user)
 
-    else:
-        return {"message": "Unauthorized"}, 401
+        return {"error": "401 unauthorized"}, 401
 
 
 class Dogs(Resource):
@@ -236,7 +236,10 @@ class DogById(Resource):
         return {"message": "dog successfully deleted"}
 
 
-api.add_resource(Users, "/users")
+api.add_resource(SignUp, "/signup", endpoint="signup")
+api.add_resource(Login, "/login", endpoint="login")
+api.add_resource(Logout, "/logout", endpoint="logout")
+api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Dogs, "/dogs")
 api.add_resource(DogById, "/dogs/<int:id>")
 

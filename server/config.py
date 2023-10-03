@@ -1,6 +1,4 @@
-# Standard library imports
-
-# Remote library imports
+import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -9,22 +7,16 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from sqlalchemy import MetaData
-
 from dotenv import load_dotenv
-import os
 
 
-# Local imports
-load_dotenv("../.env")
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-
-# Instantiate app, set attributes
+load_dotenv()
 app = Flask(__name__)
+app.secret_key = os.environ.get("APP_SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
-app.secret_key = "SECRET_KEY"
+
 
 # Define metadata, instantiate db
 metadata = MetaData(

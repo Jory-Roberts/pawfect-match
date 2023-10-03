@@ -1,10 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../AuthProvider/AuthProvider';
 
 const Navigation = () => {
-  const { user, logout } = useAuth();
-  console.log('User in navigation', user);
-
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light'>
       <div className='container-fluid'>
@@ -38,25 +34,6 @@ const Navigation = () => {
                 Home
               </Link>
             </li>
-            {user ? (
-              <li className='nav-item'>
-                <button
-                  className='nav-link btn btn-link'
-                  onClick={logout}
-                >
-                  Logout
-                </button>
-              </li>
-            ) : (
-              <li className='nav-item'>
-                <Link
-                  className='nav-link'
-                  to='/authentication'
-                >
-                  Login/Signup
-                </Link>
-              </li>
-            )}
             <li className='nav-item'>
               <Link
                 className='nav-link'

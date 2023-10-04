@@ -34,13 +34,38 @@ const Navigation = () => {
                 Home
               </Link>
             </li>
-            <li className='nav-item'>
-              <Link
-                className='nav-link'
-                to='/signup'
+            <li className='nav-item dropdown'>
+              <a
+                className='nav-link dropdown-toggle'
+                href='void'
+                id='userDropdown'
+                role='button'
+                data-bs-toggle='dropdown'
+                aria-expanded='false'
               >
-                Signup
-              </Link>
+                User
+              </a>
+              <ul
+                className='dropdown-menu'
+                aria-labelledby='userDropdown'
+              >
+                <li>
+                  <Link
+                    className='dropdown-item'
+                    to='/signup'
+                  >
+                    Signup
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    className='dropdown-item'
+                    to='/login'
+                  >
+                    Login
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li className='nav-item'>
               <Link

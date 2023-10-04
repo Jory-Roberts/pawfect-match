@@ -6,9 +6,10 @@ import DogDetail from './components/DogDetail/DogDetail';
 import NewDogForm from './components/NewDogForm/NewDogForm';
 import Header from './components/Header/Header';
 import Navigation from './components/Navigation/Navigation';
+import SignUp from './components/SignUp/SignUp';
+import Login from './components/Login/Login';
 import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import SignUp from './components/SignUp/SignUp';
 
 const App = () => {
   const navigate = useNavigate();
@@ -54,6 +55,10 @@ const App = () => {
           <Route
             path='/signup'
             element={<SignUp onSignUp={handleSetUser} />}
+          />
+          <Route
+            path='/login'
+            element={<Login onLogIn={handleSetUser} />}
           />
           <Route
             path='/dogs'

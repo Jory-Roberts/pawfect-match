@@ -10,6 +10,8 @@ from faker import Faker
 from app import app
 from models import db, User, Dog, Adoption, Review, Visit
 
+fake = Faker()
+
 
 def seed_dogs():
     dogs = []
@@ -70,22 +72,73 @@ def seed_dogs():
 
     db.session.add_all(dogs)
     db.session.commit()
+    return dogs
 
 
 def seed_users():
-    pass
+    users = []
+    for _ in range(50):
+        user = User(
+            username=fake.unique.user_name(),
+            email=fake.unique.email(),
+            admin=fake.random_element(elements=[True, False]),
+        )
+        user.password_hash = fake.password(
+            length=10,
+            special_chars=True,
+            digits=True,
+            upper_case=True,
+            lower_case=True,
+        )
+        users.append(user)
+    db.session.add_all(users)
+    db.session.commit()
+    return users
 
 
-def seed_adoptions():
-    pass
+def seed_adoptions(users, dogs):
+    adoptions = []
+    for _ in range(50):
+        adoption = Adoption(
+            user_id=fake.random_element(elements=[user.id for user in users]),
+            dog_id=fake.random_element(elements=[dog.id for dog in dogs]),
+            adoption_date=fake.date_this_decade(),
+            status=fake.random_element(elements=["Pending", "Approved", "Rejected"]),
+        )
+        adoptions.append(adoption)
+    db.session.add_all(adoptions)
+    db.session.commit()
 
 
-def seed_reviews():
-    pass
+def seed_reviews(users, dogs):
+    reviews = []
+    for _ in range(100):
+        review = Review(
+            user_id=fake.random_element(elements=[user.id for user in users]),
+            dog_id=fake.random_element(elements=[dog.id for dog in dogs]),
+            rating=fake.random_int(min=1, max=5),
+            comment=fake.text(max_nb_chars=250),
+        )
+        reviews.append(review)
+    db.session.add_all(reviews)
+    db.session.commit()
 
 
-def seed_visits():
-    pass
+def seed_visits(users, dogs):
+    visits = []
+    for _ in range(75):
+        visit = Visit(
+            user_id=fake.random_element(elements=[user.id for user in users]),
+            dog_id=fake.random_element(elements=[dog.id for dog in dogs]),
+            scheduled_date=fake.date_time_this_month(),
+            visit_status=fake.random_element(
+                elements=["Scheduled", "Visited", "Cancelled"]
+            ),
+        )
+        visits.append(visit)
+    db.session.add_all(visits)
+    db.session.commit()
+    return visits
 
 
 def main():
@@ -93,17 +146,20 @@ def main():
     with app.app_context():
         Dog.query.delete()
         User.query.delete()
+        Adoption.query.delete()
+        Visit.query.delete()
+        Review.query.delete()
 
         print("Starting seed...")
 
-        seed_dogs()
-
-        db.session.commit()
+        dogs = seed_dogs()
+        users = seed_users()
+        seed_adoptions(users, dogs)
+        seed_reviews(users, dogs)
+        seed_visits(users, dogs)
 
         print("Seeding complete...")
 
 
 if __name__ == "__main__":
     main()
-
-    # Seed code goes here!

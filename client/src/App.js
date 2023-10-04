@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Home from './components/Home/Home';
 import DogLanding from './components/DogLanding/DogLanding';
 import DogDetail from './components/DogDetail/DogDetail';
@@ -8,13 +8,23 @@ import Header from './components/Header/Header';
 import Navigation from './components/Navigation/Navigation';
 import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import SignUp from './components/SignUp/SignUp';
 
 const App = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [dogs, setDogs] = useState([]);
 
   useEffect(() => {
+    fetchUser();
     fetchDogs();
   }, []);
+
+  const fetchUser = async () => {
+    const response = await fetch('/check_session');
+    const userData = await response.json();
+    setUser(userData);
+  };
 
   const fetchDogs = async () => {
     const response = await fetch('/dogs');
@@ -26,6 +36,11 @@ const App = () => {
     setDogs((current) => [...current, dog]);
   };
 
+  const handleSetUser = (user) => {
+    setUser(user);
+    navigate('/');
+  };
+
   return (
     <div>
       <main>
@@ -35,6 +50,10 @@ const App = () => {
           <Route
             path='/'
             element={<Home />}
+          />
+          <Route
+            path='/signup'
+            element={<SignUp onSignUp={handleSetUser} />}
           />
           <Route
             path='/dogs'

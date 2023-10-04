@@ -116,11 +116,6 @@ class SignUp(Resource):
         email = data.get("email")
         password = data.get("password")
 
-        errors = check_for_missing_values(data)
-
-        if len(errors) > 0:
-            return {"errors": errors}, 422
-
         user = User(username=username, email=email)
 
         user.password_hash = password
@@ -132,15 +127,8 @@ class SignUp(Resource):
             session["user_id"] = user.id
             return singular_user_schema.dump(user), 201
 
-        except IntegrityError as e:
-            if isinstance(e, (IntegrityError)):
-                for error in e.args:
-                    if "UNIQUE" in error:
-                        errors.append(
-                            "Email or username is already registered. Please try again"
-                        )
-
-            return {"errors": errors}, 422
+        except IntegrityError:
+            return {"errors": "422 unprocessable entity"}, 422
 
 
 class Login(Resource):
@@ -240,8 +228,8 @@ api.add_resource(SignUp, "/signup", endpoint="signup")
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
 api.add_resource(CheckSession, "/check_session", endpoint="check_session")
-api.add_resource(Dogs, "/dogs", endpoint='dogs')
-api.add_resource(DogById, "/dogs/<int:id>" endpoint="dogs")
+api.add_resource(Dogs, "/dogs", endpoint="dogs")
+api.add_resource(DogById, "/dogs/<int:id>")
 
 
 @app.route("/")

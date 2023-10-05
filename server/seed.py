@@ -77,7 +77,7 @@ def seed_dogs():
 
 def seed_users():
     users = []
-    for _ in range(50):
+    for _ in range(5):
         user = User(
             username=fake.unique.user_name(),
             email=fake.unique.email(),
@@ -98,7 +98,7 @@ def seed_users():
 
 def seed_adoptions(users, dogs):
     adoptions = []
-    for _ in range(50):
+    for _ in range(10):
         adoption = Adoption(
             user_id=fake.random_element(elements=[user.id for user in users]),
             dog_id=fake.random_element(elements=[dog.id for dog in dogs]),
@@ -112,7 +112,7 @@ def seed_adoptions(users, dogs):
 
 def seed_reviews(users, dogs):
     reviews = []
-    for _ in range(100):
+    for _ in range(15):
         review = Review(
             user_id=fake.random_element(elements=[user.id for user in users]),
             dog_id=fake.random_element(elements=[dog.id for dog in dogs]),
@@ -126,7 +126,7 @@ def seed_reviews(users, dogs):
 
 def seed_visits(users, dogs):
     visits = []
-    for _ in range(75):
+    for _ in range(25):
         visit = Visit(
             user_id=fake.random_element(elements=[user.id for user in users]),
             dog_id=fake.random_element(elements=[dog.id for dog in dogs]),

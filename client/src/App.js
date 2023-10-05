@@ -70,7 +70,7 @@ const App = () => {
           />
           <Route
             path='/dogs/:id'
-            element={<DogDetail />}
+            element={<DogDetail user={user} />}
           />
         </Routes>
       </main>

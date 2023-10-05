@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Adoption from '../Adoption/Adoption';
 
-const DogDetail = () => {
+const DogDetail = ({ user }) => {
   const [dog, setDog] = useState('');
   const [error, setError] = useState(null);
 
@@ -49,9 +50,12 @@ const DogDetail = () => {
           alt={name}
         ></img>
         <h2>Reviews: </h2>
-        <button>Adopt Me!</button>
+        <Adoption
+          dogID={id}
+          userID={user}
+        />
         <button>Come See Me!</button>
-        <button>Rating</button>
+        <button>Review</button>
       </li>
     </div>
   );

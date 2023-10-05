@@ -224,12 +224,43 @@ class DogById(Resource):
         return {"message": "dog successfully deleted"}
 
 
+class Adoptions(Resource):
+    def get(self):
+        adoptions = Adoption.query.all()
+        return plural_adoption_schema.dump(adoptions)
+
+    def post(self):
+        if "user_id" not in session:
+            return {"errors": "User is not authenticated"}, 401
+
+        user_id = session["user_id"]
+
+        data = request.get_json()
+        dog_id = data.get("dog_id")
+
+        if not dog_id:
+            return {"errors": "dog_id is required"}, 400
+
+        try:
+            adoption = Adoption(user_id=user_id, dog_id=dog_id, status="Pending")
+
+            db.session.add(adoption)
+            db.session.commit()
+
+            return singular_adoption_schema.dump(adoption), 201
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": "Unprocessable entity"}, 422
+
+
 api.add_resource(SignUp, "/signup", endpoint="signup")
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
 api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Dogs, "/dogs", endpoint="dogs")
 api.add_resource(DogById, "/dogs/<int:id>")
+api.add_resource(Adoptions, "/adoptions", endpoint="adoptions")
 
 
 @app.route("/")

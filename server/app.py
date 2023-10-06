@@ -255,7 +255,7 @@ class Adoptions(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"errors": "Unprocessable entity"}, 422
+            return {"errors": "Unable to process request"}, 422
 
 
 class Reviews(Resource):
@@ -263,7 +263,30 @@ class Reviews(Resource):
         reviews = Review.query.filter_by(dog_id=dog_id).all()
         return plural_review_schema.dump(reviews)
 
-    pass
+    def post(self, dog_id):
+        if "user_id" not in session:
+            return {"errors": "User is not authenticated"}, 401
+
+        user_id = session["user_id"]
+
+        data = request.get_json()
+
+        rating = data.get("rating")
+        comment = data.get("comment")
+
+        try:
+            new_review = Review(
+                user_id=user_id, rating=rating, comment=comment, dog_id=dog_id
+            )
+
+            db.session.add(new_review)
+            db.session.commit()
+
+            return singular_review_schema.dump(new_review), 201
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": "Unable to process request."}, 422
 
 
 api.add_resource(SignUp, "/signup", endpoint="signup")

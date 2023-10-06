@@ -26,12 +26,15 @@ const Adoption = ({ dogID, userID }) => {
   if (isAdopted) return <p>Thank you! Adoption pending. Your application is under review.</p>;
 
   return (
-    <button
-      className='btn btn-primary'
-      onClick={handleAdoption}
-    >
-      Adopt Me!
-    </button>
+    <div>
+      {adoptionError && <p className='text-danger'>{adoptionError.message}</p>}
+      <button
+        className='btn btn-primary'
+        onClick={handleAdoption}
+      >
+        Adopt Me!
+      </button>
+    </div>
   );
 };
 export default Adoption;

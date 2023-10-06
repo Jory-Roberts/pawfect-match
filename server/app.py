@@ -161,7 +161,7 @@ class CheckSession(Resource):
         if session.get("user_id"):
             user = User.query.filter(User.id == session["user_id"]).first()
 
-            return singular_user_schema.dump(user)
+            return singular_user_schema.dump(user), 200
 
         return {"error": "401 unauthorized"}, 401
 

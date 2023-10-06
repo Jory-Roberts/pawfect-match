@@ -17,15 +17,13 @@ const App = () => {
   const [dogs, setDogs] = useState([]);
 
   useEffect(() => {
-    fetchUser();
+    fetch('/check_session').then((r) => {
+      if (r.ok) {
+        r.json().then((user) => setUser(user));
+      }
+    });
     fetchDogs();
   }, []);
-
-  const fetchUser = async () => {
-    const response = await fetch('/check_session');
-    const userData = await response.json();
-    setUser(userData);
-  };
 
   const fetchDogs = async () => {
     const response = await fetch('/dogs');
@@ -46,7 +44,10 @@ const App = () => {
     <div>
       <main>
         <Header />
-        <Navigation />
+        <Navigation
+          user={user}
+          setUser={setUser}
+        />
         <Routes>
           <Route
             path='/'

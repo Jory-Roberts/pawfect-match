@@ -1,6 +1,17 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Navigation = () => {
+const Navigation = ({ user, setUser }) => {
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    fetch('/logout', { method: 'DELETE' }).then((r) => {
+      if (r.ok) {
+        setUser(null);
+        navigate('/');
+      }
+    });
+  };
+
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light'>
       <div className='container-fluid'>
@@ -34,55 +45,69 @@ const Navigation = () => {
                 Home
               </Link>
             </li>
-            <li className='nav-item dropdown'>
-              <a
-                className='nav-link dropdown-toggle'
-                href='void'
-                id='userDropdown'
-                role='button'
-                data-bs-toggle='dropdown'
-                aria-expanded='false'
-              >
-                User
-              </a>
-              <ul
-                className='dropdown-menu'
-                aria-labelledby='userDropdown'
-              >
-                <li>
+            {user ? (
+              <>
+                <li className='nav-item'>
                   <Link
-                    className='dropdown-item'
-                    to='/signup'
+                    className='nav-link'
+                    to='/dogs'
                   >
-                    Signup
+                    Dogs
                   </Link>
                 </li>
-                <li>
+                <li className='nav-item'>
                   <Link
-                    className='dropdown-item'
-                    to='/login'
+                    className='nav-link'
+                    to='/dogs/new'
                   >
-                    Login
+                    Add Dog
                   </Link>
                 </li>
-              </ul>
-            </li>
-            <li className='nav-item'>
-              <Link
-                className='nav-link'
-                to='/dogs'
-              >
-                Dogs
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link
-                className='nav-link'
-                to='/dogs/new'
-              >
-                Add Dog
-              </Link>
-            </li>
+                <li className='nav-item'>
+                  <Link
+                    className='nav-link'
+                    to='#'
+                    onClick={handleLogOut}
+                  >
+                    Logout
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li className='nav-item dropdown'>
+                <a
+                  className='nav-link dropdown-toggle'
+                  href='#'
+                  id='userDropdown'
+                  role='button'
+                  data-bs-toggle='dropdown'
+                  aria-expanded='false'
+                >
+                  User
+                </a>
+                <ul
+                  className='dropdown-menu'
+                  aria-labelledby='userDropdown'
+                >
+                  <li>
+                    <Link
+                      className='dropdown-item'
+                      to='/signup'
+                    >
+                      Signup
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className='dropdown-item'
+                      to='/login'
+                    >
+                      Login
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+            )}
           </ul>
         </div>
       </div>

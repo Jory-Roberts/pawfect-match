@@ -102,19 +102,23 @@ singular_visit_schema = VisitSchema()
 plural_visit_schema = VisitSchema(many=True)
 
 
-# def check_for_missing_values(data):
-#     errors_list = []
+def check_for_missing_values(data):
+    errors_list = []
 
-#     for key, value in data.items():
-#         if not value:
-#             errors_list.append(f"{key} is required")
+    for key, value in data.items():
+        if not value:
+            errors_list.append(f"{key} is required")
 
-#     return errors_list
+    return errors_list
 
 
 class SignUp(Resource):
     def post(self):
         data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"errors": errors}, 400
 
         username = data.get("username")
         email = data.get("email")
@@ -132,12 +136,17 @@ class SignUp(Resource):
             return singular_user_schema.dump(user), 201
 
         except IntegrityError:
-            return {"errors": "Username or password unable to be verified"}, 422
+            return {"errors": "Username or password already taken"}, 422
 
 
 class Login(Resource):
     def post(self):
         data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"errors": errors}, 400
+
         username = data.get("username")
         password = data.get("password")
 
@@ -177,6 +186,10 @@ class Dogs(Resource):
 
     def post(self):
         data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"errors": errors}, 400
 
         name = data.get("name")
         breed = data.get("breed")
@@ -247,6 +260,11 @@ class Adoptions(Resource):
         user_id = session["user_id"]
 
         data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"errors": errors}, 400
+
         dog_id = data.get("dog_id")
 
         if not dog_id:
@@ -277,6 +295,10 @@ class Reviews(Resource):
         user_id = session["user_id"]
 
         data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"errors": errors}, 400
 
         rating = data.get("rating")
         comment = data.get("comment")

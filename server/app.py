@@ -102,14 +102,14 @@ singular_visit_schema = VisitSchema()
 plural_visit_schema = VisitSchema(many=True)
 
 
-def check_for_missing_values(data):
-    errors_list = []
+# def check_for_missing_values(data):
+#     errors_list = []
 
-    for key, value in data.items():
-        if not value:
-            errors_list.append(f"{key} is required")
+#     for key, value in data.items():
+#         if not value:
+#             errors_list.append(f"{key} is required")
 
-    return errors_list
+#     return errors_list
 
 
 class SignUp(Resource):
@@ -132,7 +132,7 @@ class SignUp(Resource):
             return singular_user_schema.dump(user), 201
 
         except IntegrityError:
-            return {"errors": "422 unprocessable entity"}, 422
+            return {"errors": "Username or password unable to be verified"}, 422
 
 
 class Login(Resource):
@@ -178,13 +178,20 @@ class Dogs(Resource):
     def post(self):
         data = request.get_json()
 
+        name = data.get("name")
+        breed = data.get("breed")
+        age = data.get("age")
+        gender = data.get("gender")
+        description = data.get("description")
+        image_url = data.get("image_url")
+
         new_dog = Dog(
-            name=data["name"],
-            breed=data["breed"],
-            age=data["age"],
-            gender=data["gender"],
-            description=data["description"],
-            image_url=data["image_url"],
+            name=name,
+            breed=breed,
+            age=age,
+            gender=gender,
+            description=description,
+            image_url=image_url,
         )
 
         db.session.add(new_dog)

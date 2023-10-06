@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import DogReviewForm from '../DogReviewForm/DogReviewForm';
 
 const DogReview = ({ dogId, user, name }) => {
   const params = useParams();
@@ -30,6 +31,8 @@ const DogReview = ({ dogId, user, name }) => {
     return '🦴'.repeat(rating);
   };
 
+  const handleReview = (newReview) => setReviews((prevReviews) => [...prevReviews, newReview]);
+
   return (
     <div>
       <h2>Reviews for {name}</h2>
@@ -44,7 +47,10 @@ const DogReview = ({ dogId, user, name }) => {
           </li>
         ))}
       </ul>
-      <button>Leave A Review</button>
+      <DogReviewForm
+        name={name}
+        onReviewSubmit={handleReview}
+      />
     </div>
   );
 };

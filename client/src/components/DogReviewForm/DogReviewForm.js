@@ -83,7 +83,7 @@ const DogReviewForm = ({ name, onReviewSubmit }) => {
         </div>
         <button
           type='submit'
-          className='btn btn-primary'
+          className='btn btn-outline-primary'
         >
           Submit
         </button>

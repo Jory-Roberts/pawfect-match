@@ -36,13 +36,13 @@ const DogReview = ({ dogId, user, name }) => {
   return (
     <div>
       <h2>Reviews for {name}</h2>
-      {reviewErrors.message && <p>Error: {reviewErrors.message}</p>}
+      {reviewErrors.message && <p className='text-danger'>Error: {reviewErrors.message}</p>}
       <ul>
         {reviews.map((review) => (
           <li key={review.id}>
             <strong>Username: {review.user.username}</strong>{' '}
             <p>
-              Review:{review.comment} <p>(Rating:{renderRatingAsBones(review.rating)})</p>
+              Review: {review.comment} <p>(Rating:{renderRatingAsBones(review.rating)})</p>
             </p>
           </li>
         ))}

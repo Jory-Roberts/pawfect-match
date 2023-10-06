@@ -36,6 +36,13 @@ const DogDetail = ({ user }) => {
     <div>
       <li id={id}>
         <h1>{name}</h1>
+        <div className='d-flex'>
+          <Adoption
+            dogID={id}
+            userID={user}
+          />
+          <button className='btn btn-outline-primary'>Come See Me!</button>
+        </div>
         <div>
           <h3>Breed: </h3>
           <p>{breed}</p>
@@ -54,11 +61,6 @@ const DogDetail = ({ user }) => {
           dogID={id}
           name={name}
         />
-        <Adoption
-          dogID={id}
-          userID={user}
-        />
-        <button>Come See Me!</button>
       </li>
     </div>
   );

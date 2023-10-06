@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Adoption.scss';
 
 const Adoption = ({ dogID, userID }) => {
   const [isAdopted, setIsAdopted] = useState(false);
@@ -26,10 +27,15 @@ const Adoption = ({ dogID, userID }) => {
   if (isAdopted) return <p>Thank you! Adoption pending. Your application is under review.</p>;
 
   return (
-    <div>
+    <span className='mr-3'>
       {adoptionError && <p className='text-danger'>{adoptionError.message}</p>}
-      <button onClick={handleAdoption}>Adopt Me!</button>
-    </div>
+      <button
+        className='btn btn-outline-primary adoption-btn'
+        onClick={handleAdoption}
+      >
+        Adopt Me!
+      </button>
+    </span>
   );
 };
 export default Adoption;

@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Adoption from '../Adoption/Adoption';
+import DogReview from '../DogReview/DogReview';
 
 const DogDetail = ({ user }) => {
   const [dog, setDog] = useState('');
@@ -49,13 +50,15 @@ const DogDetail = ({ user }) => {
           src={image_url}
           alt={name}
         ></img>
-        <h2>Reviews: </h2>
+        <DogReview
+          dogID={id}
+          name={name}
+        />
         <Adoption
           dogID={id}
           userID={user}
         />
         <button>Come See Me!</button>
-        <button>Review</button>
       </li>
     </div>
   );

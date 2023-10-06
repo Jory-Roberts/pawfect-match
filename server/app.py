@@ -29,6 +29,8 @@ class DogSchema(ma.SQLAlchemySchema):
     description = ma.auto_field()
     image_url = ma.auto_field()
 
+    reviews = ma.Nested("ReviewSchema", many=True)
+
 
 singular_dog_schema = DogSchema()
 plural_dog_schema = DogSchema(many=True)
@@ -76,6 +78,8 @@ class ReviewSchema(ma.SQLAlchemySchema):
     comment = ma.auto_field()
     created_at = ma.auto_field()
     updated_at = ma.auto_field()
+
+    user = ma.Nested(UserSchema)
 
 
 singular_review_schema = ReviewSchema()
@@ -254,6 +258,14 @@ class Adoptions(Resource):
             return {"errors": "Unprocessable entity"}, 422
 
 
+class Reviews(Resource):
+    def get(self, dog_id):
+        reviews = Review.query.filter_by(dog_id=dog_id).all()
+        return plural_review_schema.dump(reviews)
+
+    pass
+
+
 api.add_resource(SignUp, "/signup", endpoint="signup")
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
@@ -261,6 +273,7 @@ api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Dogs, "/dogs", endpoint="dogs")
 api.add_resource(DogById, "/dogs/<int:id>")
 api.add_resource(Adoptions, "/adoptions", endpoint="adoptions")
+api.add_resource(Reviews, "/dogs/<int:dog_id>/reviews")
 
 
 @app.route("/")

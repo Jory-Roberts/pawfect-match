@@ -49,30 +49,45 @@ const App = () => {
           setUser={setUser}
         />
         <Routes>
-          <Route
-            path='/'
-            element={<Home />}
-          />
-          <Route
-            path='/signup'
-            element={<SignUp onSignUp={handleSetUser} />}
-          />
-          <Route
-            path='/login'
-            element={<Login onLogIn={handleSetUser} />}
-          />
-          <Route
-            path='/dogs'
-            element={<DogLanding dogs={dogs} />}
-          />
-          <Route
-            path='/dogs/new'
-            element={<NewDogForm addDog={addDog} />}
-          />
-          <Route
-            path='/dogs/:id'
-            element={<DogDetail user={user} />}
-          />
+          {!user ? (
+            <>
+              <Route
+                path='/signup'
+                element={<SignUp onSignUp={handleSetUser} />}
+              />
+              <Route
+                path='/login'
+                element={<Login onLogIn={handleSetUser} />}
+              />
+              <Route
+                path='*'
+                element={<Login onLogIn={handleSetUser} />}
+              />
+            </>
+          ) : (
+            <>
+              <Route
+                path='/'
+                element={<Home />}
+              />
+              <Route
+                path='/dogs'
+                element={<DogLanding dogs={dogs} />}
+              />
+              <Route
+                path='/dogs/new'
+                element={<NewDogForm addDog={addDog} />}
+              />
+              <Route
+                path='/dogs/:id'
+                element={<DogDetail user={user} />}
+              />
+              <Route
+                path='*'
+                element={<Home />}
+              />
+            </>
+          )}
         </Routes>
       </main>
     </div>

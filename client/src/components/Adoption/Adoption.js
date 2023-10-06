@@ -28,12 +28,7 @@ const Adoption = ({ dogID, userID }) => {
   return (
     <div>
       {adoptionError && <p className='text-danger'>{adoptionError.message}</p>}
-      <button
-        className='btn btn-primary'
-        onClick={handleAdoption}
-      >
-        Adopt Me!
-      </button>
+      <button onClick={handleAdoption}>Adopt Me!</button>
     </div>
   );
 };

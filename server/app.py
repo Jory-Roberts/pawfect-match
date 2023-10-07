@@ -290,7 +290,7 @@ class Reviews(Resource):
 
     def post(self, dog_id):
         if "user_id" not in session:
-            return {"errors": "User is not authenticated"}, 401
+            return {"error": "User is not authenticated"}, 401
 
         user_id = session["user_id"]
 
@@ -298,7 +298,7 @@ class Reviews(Resource):
         errors = check_for_missing_values(data)
 
         if errors:
-            return {"errors": errors}, 400
+            return {"error": errors}, 400
 
         rating = data.get("rating")
         comment = data.get("comment")
@@ -315,21 +315,21 @@ class Reviews(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"errors": "Unable to process request."}, 422
+            return {"error": "Unable to process request."}, 422
 
     def patch(self, dog_id, review_id):
         if "user_id" not in session:
-            return {"errors": "User is not authorized"}
+            return {"error": "User is not authorized"}
 
         data = request.get_json()
         errors = check_for_missing_values(data)
 
         review = Review.query.filter_by(id=review_id, dog_id=dog_id).first()
         if not review:
-            return {"errors": errors}, 404
+            return {"error": errors}, 404
 
         if review.user_id != session["user_id"]:
-            return {"errors": errors}, 403
+            return {"error": errors}, 403
 
         for key, value in data.items():
             if hasattr(review, key):
@@ -341,21 +341,21 @@ class Reviews(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"errors": errors}, 422
+            return {"error": errors}, 422
 
     def delete(self, dog_id, review_id):
         if "user_id" not in session:
-            return {"message": "User is not authenticated"}, 401
+            return {"errors": "User is not authenticated"}, 401
 
         user_id = session["user_id"]
 
         review = Review.query.filter_by(dog_id=dog_id, id=review_id).first()
 
         if not review:
-            return {"message": "Review not found"}, 404
+            return {"error": "Review not found"}, 404
 
         if review.user_id != user_id:
-            return {"message": "Not authroized to delete selected review"}, 403
+            return {"error": "Not authroized to delete selected review"}, 403
 
         try:
             db.session.delete(review)
@@ -364,7 +364,7 @@ class Reviews(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"errors": "Unable to process request"}, 422
+            return {"error": "Unable to process request"}, 422
 
 
 api.add_resource(SignUp, "/signup", endpoint="signup")

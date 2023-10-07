@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DogReviewForm from '../DogReviewForm/DogReviewForm';
+import EditReview from '../EditReview/EditReview';
 
-const DogReview = ({ dogId, name }) => {
+const DogReview = ({ dogId, name, user }) => {
   const params = useParams();
   const [reviews, setReviews] = useState([]);
   const [reviewErrors, setReviewErrors] = useState({});
+  const [reviewEdit, setReviewEdit] = useState(null);
 
   const fetchReviews = async () => {
     try {
@@ -31,7 +33,15 @@ const DogReview = ({ dogId, name }) => {
     return '🦴'.repeat(rating);
   };
 
-  const handleReview = (newReview) => setReviews((prevReviews) => [...prevReviews, newReview]);
+  const handleReview = (updatedReview) => {
+    if (reviewEdit) {
+      const newReviews = reviews.map((review) => (review.id === updatedReview.id ? updatedReview : review));
+      setReviews(newReviews);
+    } else {
+      setReviews((prevReviews) => [...prevReviews, updatedReview]);
+    }
+    setReviewEdit(null);
+  };
 
   return (
     <div>
@@ -44,12 +54,20 @@ const DogReview = ({ dogId, name }) => {
             <p>
               Review: {review.comment} <p>(Rating:{renderRatingAsBones(review.rating)})</p>
             </p>
+            {user && user.id === review.user.id && (
+              <EditReview
+                review={review}
+                setReviewEdit={setReviewEdit}
+              />
+            )}
           </li>
         ))}
       </ul>
       <DogReviewForm
         name={name}
         onReviewSubmit={handleReview}
+        reviewEdit={reviewEdit}
+        setReviewEdit={setReviewEdit}
       />
     </div>
   );

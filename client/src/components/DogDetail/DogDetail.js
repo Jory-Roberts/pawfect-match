@@ -73,6 +73,7 @@ const DogDetail = ({ user }) => {
           <DogReview
             dogID={id}
             name={name}
+            user={user}
           />
         </li>
       </div>

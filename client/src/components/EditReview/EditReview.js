@@ -1,7 +1,8 @@
-const EditReview = () => {
+const EditReview = ({ review, setReviewEdit }) => {
+  const handleEditReview = () => setReviewEdit(review);
   return (
     <div>
-      <button>EditReview</button>
+      <button onClick={handleEditReview}>EditReview</button>
     </div>
   );
 };

@@ -1,11 +1,15 @@
-import { Formik, FormikContext, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import * as yup from 'yup';
 
-const DogReviewForm = ({ name, onReviewSubmit }) => {
+const DogReviewForm = ({ name, onReviewSubmit, reviewEdit, setReviewEdit }) => {
   const [reviewFormErrors, setReviewFormErrors] = useState({});
   const params = useParams();
+
+  const isEditing = reviewEdit != null;
+
+  const handleCancelEdit = () => setReviewEdit(null);
 
   const formSchema = yup.object({
     rating: yup
@@ -21,14 +25,16 @@ const DogReviewForm = ({ name, onReviewSubmit }) => {
 
   const formik = useFormik({
     initialValues: {
-      rating: 1,
-      comment: '',
+      rating: isEditing ? reviewEdit.rating : 1,
+      comment: isEditing ? reviewEdit.comment : '',
     },
     validationSchema: formSchema,
     onSubmit: async (values) => {
+      const API = isEditing ? `/dogs/${params.id}/reviews/${reviewEdit.id}` : `/dogs/${params.id}/reviews`;
+
       try {
-        const response = await fetch(`/dogs/${params.id}/reviews`, {
-          method: 'POST',
+        const response = await fetch(API, {
+          method: isEditing ? 'PATCH' : 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -38,6 +44,7 @@ const DogReviewForm = ({ name, onReviewSubmit }) => {
           const reviewData = await response.json();
           onReviewSubmit(reviewData);
           formik.resetForm();
+          if (isEditing) setReviewEdit(null);
         } else {
           const formErrorData = await response.json();
           setReviewFormErrors({ message: formErrorData.message });
@@ -50,7 +57,9 @@ const DogReviewForm = ({ name, onReviewSubmit }) => {
 
   return (
     <div className='container mt-5'>
-      <h2>Leave a Review for {name}</h2>
+      <h2>
+        {isEditing ? 'Edit' : 'Leave'} a Review for {name}
+      </h2>
       {reviewFormErrors.message && <p>Error: {reviewFormErrors.message}</p>}
       <form onSubmit={formik.handleSubmit}>
         <div className='form-group'>
@@ -87,6 +96,15 @@ const DogReviewForm = ({ name, onReviewSubmit }) => {
         >
           Submit
         </button>
+        {isEditing && (
+          <button
+            type='button'
+            className='btn btn-outline-primary'
+            onClick={handleCancelEdit}
+          >
+            Cancel
+          </button>
+        )}
       </form>
     </div>
   );

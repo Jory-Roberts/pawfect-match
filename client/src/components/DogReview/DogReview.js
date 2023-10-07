@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DogReviewForm from '../DogReviewForm/DogReviewForm';
 
-const DogReview = ({ dogId, user, name }) => {
+const DogReview = ({ dogId, name }) => {
   const params = useParams();
   const [reviews, setReviews] = useState([]);
   const [reviewErrors, setReviewErrors] = useState({});

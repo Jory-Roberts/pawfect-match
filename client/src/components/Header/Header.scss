@@ -1,0 +1,9 @@
+$bg-color: #000;
+$text-color: lightgrey;
+
+body,
+html {
+  background-color: $bg-color;
+  color: $text-color;
+  height: 100%;
+}

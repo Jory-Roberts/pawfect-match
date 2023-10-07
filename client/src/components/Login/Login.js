@@ -37,47 +37,67 @@ const Login = ({ onLogIn }) => {
 
   return (
     <div className='container mt-5'>
-      <h2>Login</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <div className='mb-3'>
-          <label htmlFor='username'>Username:</label>
-          <input
-            id='username'
-            name='username'
-            type='text'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.username}
-            className={formik.touched.username && formik.errors.username ? 'is-invalid' : ''}
-          />
-          {formik.touched.username && formik.errors.username ? (
-            <div className='invalid-feedback'>{formik.errors.username}</div>
-          ) : null}
-        </div>
+      <div className='row'>
+        <div className='col-12 col-md-4 mx-auto'>
+          <h2 className='text-center mb-4'>Login</h2>
+          <form onSubmit={formik.handleSubmit}>
+            <div className='mb-3'>
+              <label
+                htmlFor='username'
+                className='form-label'
+              >
+                Username:
+              </label>
+              <input
+                id='username'
+                name='username'
+                type='text'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.username}
+                className={
+                  formik.touched.username && formik.errors.username ? 'form-control is-invalid' : 'form-control'
+                }
+              />
+              {formik.touched.username && formik.errors.username ? (
+                <div className='invalid-feedback'>{formik.errors.username}</div>
+              ) : null}
+            </div>
 
-        <div className='mb-3'>
-          <label htmlFor='password'>Password:</label>
-          <input
-            id='password'
-            name='password'
-            type='password'
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            className={formik.touched.password && formik.errors.password ? 'is-invalid' : ''}
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div className='invalid-feedback'>{formik.errors.password}</div>
-          ) : null}
-        </div>
+            <div className='mb-3'>
+              <label
+                htmlFor='password'
+                className='form-label'
+              >
+                Password:
+              </label>
+              <input
+                id='password'
+                name='password'
+                type='password'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+                className={
+                  formik.touched.password && formik.errors.password ? 'form-control is-invalid' : 'form-control'
+                }
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <div className='invalid-feedback'>{formik.errors.password}</div>
+              ) : null}
+            </div>
 
-        <button
-          type='submit'
-          className='btn btn-primary'
-        >
-          Login
-        </button>
-      </form>
+            <div className='text-center'>
+              <button
+                type='submit'
+                className='btn btn-primary'
+              >
+                Login
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const Navigation = ({ user, setUser }) => {
           className='navbar-brand'
           to='/'
         >
-          Welcome!
+          Welcome {user ? `, ${user.username}` : ''}!
         </Link>
         <button
           className='navbar-toggler'

@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Adoption from '../Adoption/Adoption';
 import DogReview from '../DogReview/DogReview';
+import './DogDetail.scss';
 
 const DogDetail = ({ user }) => {
   const [dog, setDog] = useState('');
@@ -33,36 +34,50 @@ const DogDetail = ({ user }) => {
   if (error) return <h2>{error}</h2>;
 
   return (
-    <div>
-      <li id={id}>
-        <h1>{name}</h1>
-        <div className='d-flex'>
-          <Adoption
+    <div className='container mt-5'>
+      <div className='row justify-content-center'>
+        <li
+          id={id}
+          className='col-md-8 no-bullet'
+        >
+          <h1 className='text-center'>{name}</h1>
+
+          <div className='d-flex flex-row flex-wrap justify-content-between'>
+            <div className='col-md-6'>
+              <h5>Breed: </h5>
+              <p>{breed}</p>
+              <h5>Age: </h5>
+              <p>{age}</p>
+              <h5>Gender: </h5>
+              <p>{gender}</p>
+              <h5>Description: </h5>
+              <p>{description}</p>
+            </div>
+            <div className='col-md-6'>
+              <img
+                src={image_url}
+                alt={name}
+                className='img-fluid mb-3'
+              ></img>
+            </div>
+          </div>
+
+          <div className='text-center mt-3'>
+            <Adoption
+              dogID={id}
+              userID={user}
+            />
+            <button className='btn btn-outline-primary mx-2'>Come See Me!</button>
+          </div>
+
+          <DogReview
             dogID={id}
-            userID={user}
+            name={name}
           />
-          <button className='btn btn-outline-primary'>Come See Me!</button>
-        </div>
-        <div>
-          <h3>Breed: </h3>
-          <p>{breed}</p>
-          <h3>Age: </h3>
-          <p>{age}</p>
-          <h3>Gender: </h3>
-          <p>{gender}</p>
-          <h3>Description: </h3>
-          <p>{description}</p>
-        </div>
-        <img
-          src={image_url}
-          alt={name}
-        ></img>
-        <DogReview
-          dogID={id}
-          name={name}
-        />
-      </li>
+        </li>
+      </div>
     </div>
   );
 };
+
 export default DogDetail;

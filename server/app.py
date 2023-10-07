@@ -317,6 +317,55 @@ class Reviews(Resource):
             db.session.rollback()
             return {"errors": "Unable to process request."}, 422
 
+    def patch(self, dog_id, review_id):
+        if "user_id" not in session:
+            return {"errors": "User is not authorized"}
+
+        data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        review = Review.query.filter_by(id=review_id, dog_id=dog_id).first()
+        if not review:
+            return {"errors": errors}, 404
+
+        if review.user_id != session["user_id"]:
+            return {"errors": errors}, 403
+
+        for key, value in data.items():
+            if hasattr(review, key):
+                setattr(review, key, value)
+
+        try:
+            db.session.commit()
+            return singular_review_schema.dump(review), 200
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": errors}, 422
+
+    def delete(self, dog_id, review_id):
+        if "user_id" not in session:
+            return {"message": "User is not authenticated"}, 401
+
+        user_id = session["user_id"]
+
+        review = Review.query.filter_by(dog_id=dog_id, id=review_id).first()
+
+        if not review:
+            return {"message": "Review not found"}, 404
+
+        if review.user_id != user_id:
+            return {"message": "Not authroized to delete selected review"}, 403
+
+        try:
+            db.session.delete(review)
+            db.session.commit()
+            return {"message": "Review deleted"}, 200
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": "Unable to process request"}, 422
+
 
 api.add_resource(SignUp, "/signup", endpoint="signup")
 api.add_resource(Login, "/login", endpoint="login")
@@ -325,7 +374,9 @@ api.add_resource(CheckSession, "/check_session", endpoint="check_session")
 api.add_resource(Dogs, "/dogs", endpoint="dogs")
 api.add_resource(DogById, "/dogs/<int:id>")
 api.add_resource(Adoptions, "/adoptions", endpoint="adoptions")
-api.add_resource(Reviews, "/dogs/<int:dog_id>/reviews")
+api.add_resource(
+    Reviews, "/dogs/<int:dog_id>/reviews", "/dogs/<int:dog_id>/reviews/<int:review_id>"
+)
 
 
 @app.route("/")

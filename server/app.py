@@ -355,7 +355,7 @@ class Reviews(Resource):
             return {"error": "Review not found"}, 404
 
         if review.user_id != user_id:
-            return {"error": "Not authroized to delete selected review"}, 403
+            return {"error": "Not authorized to delete selected review"}, 403
 
         try:
             db.session.delete(review)

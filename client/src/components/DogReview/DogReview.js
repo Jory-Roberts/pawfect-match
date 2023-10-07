@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import DogReviewForm from '../DogReviewForm/DogReviewForm';
 import EditReview from '../EditReview/EditReview';
+import DeleteReview from '../DeleteReview/DeleteReview';
 
 const DogReview = ({ dogId, name, user }) => {
   const params = useParams();
@@ -43,6 +44,22 @@ const DogReview = ({ dogId, name, user }) => {
     setReviewEdit(null);
   };
 
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      const response = await fetch(`/dogs/${params.id}/reviews/${reviewId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setReviews(reviews.filter((review) => review.id !== reviewId));
+      } else {
+        const deleteErrorData = await response.json();
+        setReviewErrors({ message: deleteErrorData.message });
+      }
+    } catch (error) {
+      setReviewErrors({ message: error.message });
+    }
+  };
+
   return (
     <div>
       <h2>Reviews for {name}</h2>
@@ -55,10 +72,16 @@ const DogReview = ({ dogId, name, user }) => {
               Review: {review.comment} <p>(Rating:{renderRatingAsBones(review.rating)})</p>
             </p>
             {user && user.id === review.user.id && (
-              <EditReview
-                review={review}
-                setReviewEdit={setReviewEdit}
-              />
+              <>
+                <EditReview
+                  review={review}
+                  setReviewEdit={setReviewEdit}
+                />
+                <DeleteReview
+                  reviewId={review.id}
+                  onDelete={handleDeleteReview}
+                />
+              </>
             )}
           </li>
         ))}

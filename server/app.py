@@ -469,7 +469,7 @@ api.add_resource(Visits, "/visits/<int:user_id>/<int:dog_id>")
 
 @app.route("/")
 def index():
-    return "<h1>Project Server</h1>"
+    return "<h1>Pawfect Match Server</h1>"
 
 
 if __name__ == "__main__":

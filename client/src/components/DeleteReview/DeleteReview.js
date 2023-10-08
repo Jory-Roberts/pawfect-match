@@ -1,5 +1,5 @@
-import './DeleteReview.scss';
 import React, { useState } from 'react';
+import './DeleteReview.scss';
 
 const DeleteReview = ({ reviewId, onDelete }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);

@@ -1,8 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Adoption from '../Adoption/Adoption';
 import DogReview from '../DogReview/DogReview';
 import './DogDetail.scss';
+import DogVisit from '../DogVisit/DogVisit';
 
 const DogDetail = ({ user }) => {
   const [dog, setDog] = useState('');
@@ -67,7 +68,10 @@ const DogDetail = ({ user }) => {
               dogID={id}
               userID={user}
             />
-            <button className='btn btn-outline-primary mx-2'>Come See Me!</button>
+            <DogVisit
+              dogID={id}
+              user={user}
+            />
           </div>
 
           <DogReview

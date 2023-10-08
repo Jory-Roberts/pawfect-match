@@ -368,11 +368,15 @@ class Reviews(Resource):
 
 
 class Visits(Resource):
-    def get(self):
-        visits = Visit.query.all()
+    def get(self, user_id, dog_id):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"error": "User is not authenticated"}, 401
+
+        visits = Visit.query.filter_by(dog_id=dog_id, user_id=user_id).all()
         return plural_visit_schema.dump(visits)
 
-    def post(self):
+    def post(self, user_id, dog_id):
         if "user_id" not in session:
             return {"error": "User is not authenticated"}, 401
 
@@ -407,18 +411,15 @@ class Visits(Resource):
             db.session.rollback()
             return {"error": "Unable to process request"}, 422
 
-    def patch(self, visit_id):
-        if "user_id" not in session:
-            return {"error": "User is not authenticated"}, 401
+    def patch(self, user_id, dog_id):
+        if "user_id" not in session or session["user_id"] != user_id:
+            return {"error": "User is not authenticated or mismatched"}, 401
 
-        data = request.get_json()
-
-        visit = Visit.query.filter_by(id=visit_id).first()
+        visit = Visit.query.filter_by(user_id=user_id, dog_id=dog_id).first()
         if not visit:
             return {"error": "Visit not found"}, 404
 
-        if visit.user_id != session["user_id"]:
-            return {"error": "Unauthorized to edit this visit"}, 403
+        data = request.get_json()
 
         for key, value in data.items():
             if key == "scheduled_date":
@@ -434,17 +435,14 @@ class Visits(Resource):
             db.session.rollback()
             return {"errors": "Failed to update visit details"}, 422
 
-    def delete(self, visit_id):
-        if "user_id" not in session:
-            return {"error": "User is not authenticated"}, 401
+    def delete(self, user_id, dog_id):
+        if "user_id" not in session or session["user_id"] != user_id:
+            return {"error": "User is not authenticated or mismatched"}, 401
 
-        visit = Visit.query.filter_by(id=visit_id).first()
+        visit = Visit.query.filter_by(user_id=user_id, dog_id=dog_id).first()
 
         if not visit:
             return {"error": "Visit not found"}, 404
-
-        if visit.user_id != session["user_id"]:
-            return {"error": "Not authorized to delete this visit"}, 403
 
         try:
             db.session.delete(visit)
@@ -466,7 +464,7 @@ api.add_resource(Adoptions, "/adoptions", endpoint="adoptions")
 api.add_resource(
     Reviews, "/dogs/<int:dog_id>/reviews", "/dogs/<int:dog_id>/reviews/<int:review_id>"
 )
-api.add_resource(Visits, "/visits", "/visits/<int:visit_id>")
+api.add_resource(Visits, "/visits/<int:user_id>/<int:dog_id>")
 
 
 @app.route("/")

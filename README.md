@@ -18,7 +18,7 @@ Before you can begin anything with Pawfect Match, you'll need to create a .env f
 
 You can create your new `.env` file by running `touch .env` from the command line. This will place it at the top of the file structure, outside of `server/` and `client/` paths.
 
-Generate your secret key by following the steps here [`Secret Key`](python -c 'import os; print(os.urandom(16))')
+Generate your secret key by following the steps found at - [Secret Key](https://furry-shrimp-4f0.notion.site/Cookies-and-Sessions-Cheatsheet-2e4cbcd1c8ee4d71b8b0da395ebb3fe4?pvs=4)
 
 Inside of your `.env`, set your newly generated secret key to this variable:
 `APP_SECRET_KEY=your_secret_key_goes_here`

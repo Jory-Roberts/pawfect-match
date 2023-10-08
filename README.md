@@ -6,6 +6,8 @@
 
 Pawfect Match was designed to streamline the adoption process and get our most precious resource, (4 legged balls of fur), matched with their pawfect owners much sooner. Designed around my life long love of dogs, this is a project that I plan to continue to nurture and grow.
 
+User's will be able to see the site contents once they've created their own account. Once inside, user's are encouraged to Adopt, Visit and leave a Review for the dog of their choice!
+
 ## Where Do I Start?
 
 `Fork` and `clone` this repo to to your local machine. You can clone to your local machine with `git clone` in your desired local directory followed by copying the `SSH` attached to your persnal [Github](https://github.com) account.
@@ -18,7 +20,7 @@ Before you can begin anything with Pawfect Match, you'll need to create a .env f
 
 You can create your new `.env` file by running `touch .env` from the command line. This will place it at the top of the file structure, outside of `server/` and `client/` paths.
 
-Generate your secret key by following the steps found at - [Secret Key](https://furry-shrimp-4f0.notion.site/Cookies-and-Sessions-Cheatsheet-2e4cbcd1c8ee4d71b8b0da395ebb3fe4?pvs=4) (Thanks to Tom Tobar for creating this!)
+Generate your secret key by performing the following: python -c 'import os; print(os.urandom(16))'
 
 Inside of your `.env`, set your newly generated secret key to this variable:
 `APP_SECRET_KEY=your_secret_key_goes_here`
@@ -108,6 +110,10 @@ Run `python seed.py`. The initial seed structure will be run populating the tabl
 There are quite a few features that will be implemented throughout the lifecycle of Pawfect Match. As it stands, any logged in `user` can add a dog to the database. This feature will be changed so that only designated admin users will be able to add and remove dogs from Pawfect Match.
 
 The `user` currently has no way to edit their visit. The backend for this feature is present, only the frontend architecture reamains to be implemented.
+
+The site will be hosted when I have implemented the apppropriate feature fixes. For now, I hope you find your Pawfect Match. Happy coding!
+
+**Thank you to Tom Tobar for creating the handy resource on generating the secret key!**
 
 ## Resources
 

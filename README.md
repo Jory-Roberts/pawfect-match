@@ -12,6 +12,25 @@ Pawfect Match was designed to streamline the adoption process and get our most p
 
 ## Setup
 
+### `config.py`
+
+Before you can begin anything with Pawfect Match, you'll need to create a .env file (this is already in the gitignore). This .env will house the SECRET_KEY you'll need to generate on your own local machine in order for this project to launch correctly.
+
+You can create your new `.env` file by running `touch .env` from the command line. This will place it at the top of the file structure, outside of `server/` and `client/` paths.
+
+Generate your secret key by following the steps here [`Secret Key`](python -c 'import os; print(os.urandom(16))')
+
+Inside of your `.env`, set your newly generated secret key to this variable:
+`APP_SECRET_KEY=your_secret_key_goes_here`
+
+`config.py`
+
+```
+load_dotenv()
+app = Flask(__name__)
+app.secret_key = os.environ.get("APP_SECRET_KEY")
+```
+
 ### `server/`
 
 The `server/` directory contains all of the backend code for Pawfect Match.
@@ -93,3 +112,4 @@ The `user` currently has no way to edit their visit. The backend for this featur
 ## Resources
 
 - [Dog Photos](https://commons.wikimedia.org/wiki/List_of_dog_breeds)
+- [Secret Key](https://furry-shrimp-4f0.notion.site/Cookies-and-Sessions-Cheatsheet-2e4cbcd1c8ee4d71b8b0da395ebb3fe4?pvs=4)

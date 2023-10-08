@@ -6,6 +6,7 @@
 from flask import Flask, jsonify, make_response, request, session
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 
 # Local imports
@@ -245,7 +246,7 @@ class DogById(Resource):
         db.session.delete(dog)
         db.session.commit()
 
-        return {"message": "dog successfully deleted"}
+        return {"message": "Dog successfully deleted"}
 
 
 class Adoptions(Resource):
@@ -255,7 +256,7 @@ class Adoptions(Resource):
 
     def post(self):
         if "user_id" not in session:
-            return {"errors": "User is not authenticated"}, 401
+            return {"error": "User is not authenticated"}, 401
 
         user_id = session["user_id"]
 
@@ -263,12 +264,12 @@ class Adoptions(Resource):
         errors = check_for_missing_values(data)
 
         if errors:
-            return {"errors": errors}, 400
+            return {"error": errors}, 400
 
         dog_id = data.get("dog_id")
 
         if not dog_id:
-            return {"errors": "dog_id is required"}, 400
+            return {"error": "dog_id is required"}, 400
 
         try:
             adoption = Adoption(user_id=user_id, dog_id=dog_id, status="Pending")
@@ -280,7 +281,7 @@ class Adoptions(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"errors": "Unable to process request"}, 422
+            return {"error": errors}, 422
 
 
 class Reviews(Resource):
@@ -319,17 +320,16 @@ class Reviews(Resource):
 
     def patch(self, dog_id, review_id):
         if "user_id" not in session:
-            return {"error": "User is not authorized"}
+            return {"error": "User is not authenticated"}, 401
 
         data = request.get_json()
-        errors = check_for_missing_values(data)
 
         review = Review.query.filter_by(id=review_id, dog_id=dog_id).first()
         if not review:
-            return {"error": errors}, 404
+            return {"error": "Review does not exist"}, 404
 
         if review.user_id != session["user_id"]:
-            return {"error": errors}, 403
+            return {"error": "Not authorized to edit this review"}, 403
 
         for key, value in data.items():
             if hasattr(review, key):
@@ -341,11 +341,11 @@ class Reviews(Resource):
 
         except IntegrityError:
             db.session.rollback()
-            return {"error": errors}, 422
+            return {"error": "Unable to process request"}, 422
 
     def delete(self, dog_id, review_id):
         if "user_id" not in session:
-            return {"errors": "User is not authenticated"}, 401
+            return {"error": "User is not authenticated"}, 401
 
         user_id = session["user_id"]
 
@@ -367,6 +367,95 @@ class Reviews(Resource):
             return {"error": "Unable to process request"}, 422
 
 
+class Visits(Resource):
+    def get(self):
+        visits = Visit.query.all()
+        return plural_visit_schema.dump(visits)
+
+    def post(self):
+        if "user_id" not in session:
+            return {"error": "User is not authenticated"}, 401
+
+        user_id = session["user_id"]
+
+        data = request.get_json()
+        errors = check_for_missing_values(data)
+
+        if errors:
+            return {"error": "errors"}, 404
+
+        dog_id = data.get("dog_id")
+        scheduled_date_string = data.get("scheduled_date")
+        scheduled_date_object = datetime.fromisoformat(scheduled_date_string)
+
+        existing_visit = Visit.query.filter_by(user_id=user_id, dog_id=dog_id).first()
+        if existing_visit:
+            return {"error": "You've already scheduled a visit for this dog"}, 400
+
+        try:
+            new_visit = Visit(
+                user_id=user_id,
+                dog_id=dog_id,
+                scheduled_date=scheduled_date_object,
+                visit_status="Scheduled",
+            )
+            db.session.add(new_visit)
+            db.session.commit()
+            return singular_visit_schema.dump(new_visit)
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Unable to process request"}, 422
+
+    def patch(self, visit_id):
+        if "user_id" not in session:
+            return {"error": "User is not authenticated"}, 401
+
+        data = request.get_json()
+
+        visit = Visit.query.filter_by(id=visit_id).first()
+        if not visit:
+            return {"error": "Visit not found"}, 404
+
+        if visit.user_id != session["user_id"]:
+            return {"error": "Unauthorized to edit this visit"}, 403
+
+        for key, value in data.items():
+            if key == "scheduled_date":
+                value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
+            if hasattr(visit, key):
+                setattr(visit, key, value)
+
+        try:
+            db.session.commit()
+            return singular_visit_schema.dump(visit)
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": "Failed to update visit details"}, 422
+
+    def delete(self, visit_id):
+        if "user_id" not in session:
+            return {"error": "User is not authenticated"}, 401
+
+        visit = Visit.query.filter_by(id=visit_id).first()
+
+        if not visit:
+            return {"error": "Visit not found"}, 404
+
+        if visit.user_id != session["user_id"]:
+            return {"error": "Not authorized to delete this visit"}, 403
+
+        try:
+            db.session.delete(visit)
+            db.session.commit()
+            return {"message": "Visit deleted successfully"}, 200
+
+        except IntegrityError:
+            db.session.rollback()
+            return {"error": "Unable to process request"}, 422
+
+
 api.add_resource(SignUp, "/signup", endpoint="signup")
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
@@ -377,6 +466,7 @@ api.add_resource(Adoptions, "/adoptions", endpoint="adoptions")
 api.add_resource(
     Reviews, "/dogs/<int:dog_id>/reviews", "/dogs/<int:dog_id>/reviews/<int:review_id>"
 )
+api.add_resource(Visits, "/visits", "/visits/<int:visit_id>")
 
 
 @app.route("/")
